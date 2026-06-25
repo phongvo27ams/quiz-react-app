@@ -9,8 +9,8 @@
         "sectionId": "black-box-testing",
         "title": "Boundary Value Analysis - Hotel Reservation System",
         "description": "Practice identifying boundary values in a hotel booking workflow.",
-        "createdAt": "2026-06-25T16:23:46.706Z",
-        "updatedAt": "2026-06-25T16:23:46.706Z",
+        "createdAt": "2026-06-25T18:04:07.897Z",
+        "updatedAt": "2026-06-25T18:04:07.897Z",
         "questions": [
           {
             "id": "bva-q1",
@@ -190,8 +190,8 @@
         "sectionId": "black-box-testing",
         "title": "Equivalence Partitioning - Shipping Fee",
         "description": "Group inputs and derive expected outcomes for shipping charges.",
-        "createdAt": "2026-06-25T16:23:46.710Z",
-        "updatedAt": "2026-06-25T16:23:46.710Z",
+        "createdAt": "2026-06-25T18:04:07.900Z",
+        "updatedAt": "2026-06-25T18:04:07.900Z",
         "questions": [
           {
             "id": "ep-q1",
@@ -378,8 +378,8 @@
         "sectionId": "test-automation",
         "title": "Locator Strategy - Login Page",
         "description": "Choose stable locators for a login screen and related checks.",
-        "createdAt": "2026-06-25T16:23:46.713Z",
-        "updatedAt": "2026-06-25T16:23:46.713Z",
+        "createdAt": "2026-06-25T18:04:07.903Z",
+        "updatedAt": "2026-06-25T18:04:07.903Z",
         "questions": [
           {
             "id": "ta-q1",
@@ -559,8 +559,8 @@
         "sectionId": "test-automation",
         "title": "Form Stability - Signup Flow",
         "description": "Practice choosing stable checks for a signup form.",
-        "createdAt": "2026-06-25T16:23:46.717Z",
-        "updatedAt": "2026-06-25T16:23:46.717Z",
+        "createdAt": "2026-06-25T18:04:07.906Z",
+        "updatedAt": "2026-06-25T18:04:07.906Z",
         "questions": [
           {
             "id": "fs-q1",
