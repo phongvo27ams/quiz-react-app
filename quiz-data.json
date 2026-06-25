@@ -1,0 +1,740 @@
+[
+  {
+    "id": "black-box-testing",
+    "title": "Black Box Testing",
+    "description": "Testing techniques focused on input, output, and observable behavior.",
+    "exercises": [
+      {
+        "id": "bva-hotel-reservation-system",
+        "sectionId": "black-box-testing",
+        "title": "Boundary Value Analysis - Hotel Reservation System",
+        "description": "Practice identifying boundary values in a hotel booking workflow.",
+        "createdAt": "2026-06-25T16:23:46.706Z",
+        "updatedAt": "2026-06-25T16:23:46.706Z",
+        "questions": [
+          {
+            "id": "bva-q1",
+            "exerciseId": "bva-hotel-reservation-system",
+            "prompt": "## Question 1\n\nA hotel allows stays from 1 to 14 nights. Which test values best cover the boundaries?\n\n```ts\nconst stayLengths = [0, 1, 2, 13, 14, 15];\n```",
+            "explanation": "Boundary value analysis focuses on values just below, at, and just above the limits.\n\n![Boundary Value Analysis](https://placehold.co/640x220/png?text=Boundary+Value+Analysis)",
+            "correctOptionId": "bva-q1-b",
+            "orderIndex": 1,
+            "options": [
+              {
+                "id": "bva-q1-a",
+                "questionId": "bva-q1",
+                "label": "A",
+                "text": "Only `1` and `14`"
+              },
+              {
+                "id": "bva-q1-b",
+                "questionId": "bva-q1",
+                "label": "B",
+                "text": "`0, 1, 2, 13, 14, 15`"
+              },
+              {
+                "id": "bva-q1-c",
+                "questionId": "bva-q1",
+                "label": "C",
+                "text": "Only `2` and `13`"
+              },
+              {
+                "id": "bva-q1-d",
+                "questionId": "bva-q1",
+                "label": "D",
+                "text": "`1, 7, 14`"
+              }
+            ]
+          },
+          {
+            "id": "bva-q2",
+            "exerciseId": "bva-hotel-reservation-system",
+            "prompt": "## Question 2\n\nThe booking system accepts up to 3 guests per room. Which value is the most important upper-bound test?\n\n```ts\nconst maxGuests = 3;\n```\n\nUse the formula $n = max + 1$ to test just above the valid range.",
+            "explanation": "Upper-bound testing should include the maximum valid value and one value above it.\n\n![Upper Bound Testing](https://placehold.co/640x240/png?text=Upper+Bound+Testing)",
+            "correctOptionId": "bva-q2-c",
+            "orderIndex": 2,
+            "options": [
+              {
+                "id": "bva-q2-a",
+                "questionId": "bva-q2",
+                "label": "A",
+                "text": "`2` only"
+              },
+              {
+                "id": "bva-q2-b",
+                "questionId": "bva-q2",
+                "label": "B",
+                "text": "`3` only"
+              },
+              {
+                "id": "bva-q2-c",
+                "questionId": "bva-q2",
+                "label": "C",
+                "text": "`3` and `4`"
+              },
+              {
+                "id": "bva-q2-d",
+                "questionId": "bva-q2",
+                "label": "D",
+                "text": "`1` and `2`"
+              }
+            ]
+          },
+          {
+            "id": "bva-q3",
+            "exerciseId": "bva-hotel-reservation-system",
+            "prompt": "## Question 3\n\nThe room price must be between $50 and $500. Which pair is the best boundary test?\n\n```ts\nconst min = 50;\nconst max = 500;\n```\n\nFormula: $[min - 1, min, max, max + 1]$",
+            "explanation": "A good boundary test checks values immediately outside and inside the range.\n\n![Price Range Boundaries](https://placehold.co/640x220/png?text=Price+Range+Boundaries)",
+            "correctOptionId": "bva-q3-d",
+            "orderIndex": 3,
+            "options": [
+              {
+                "id": "bva-q3-a",
+                "questionId": "bva-q3",
+                "label": "A",
+                "text": "`49` and `50`"
+              },
+              {
+                "id": "bva-q3-b",
+                "questionId": "bva-q3",
+                "label": "B",
+                "text": "`500` and `501`"
+              },
+              {
+                "id": "bva-q3-c",
+                "questionId": "bva-q3",
+                "label": "C",
+                "text": "`100` and `200`"
+              },
+              {
+                "id": "bva-q3-d",
+                "questionId": "bva-q3",
+                "label": "D",
+                "text": "`49`, `50`, `500`, `501`"
+              }
+            ]
+          },
+          {
+            "id": "bva-q4",
+            "exerciseId": "bva-hotel-reservation-system",
+            "prompt": "## Question 4\n\nA cancellation fee applies only when the booking is canceled within 24 hours. Which case is a valid on/off boundary?\n\n```ts\nconst freeCancellationWindowHours = 24;\n```",
+            "explanation": "Test both sides of the boundary: just before 24 hours and exactly at 24 hours.\n\n![Cancellation Window](https://placehold.co/640x220/png?text=Cancellation+Window)",
+            "correctOptionId": "bva-q4-a",
+            "orderIndex": 4,
+            "options": [
+              {
+                "id": "bva-q4-a",
+                "questionId": "bva-q4",
+                "label": "A",
+                "text": "`23` and `24` hours"
+              },
+              {
+                "id": "bva-q4-b",
+                "questionId": "bva-q4",
+                "label": "B",
+                "text": "`10` and `20` hours"
+              },
+              {
+                "id": "bva-q4-c",
+                "questionId": "bva-q4",
+                "label": "C",
+                "text": "`24` and `36` hours"
+              },
+              {
+                "id": "bva-q4-d",
+                "questionId": "bva-q4",
+                "label": "D",
+                "text": "`1` and `48` hours"
+              }
+            ]
+          },
+          {
+            "id": "bva-q5",
+            "exerciseId": "bva-hotel-reservation-system",
+            "prompt": "## Question 5\n\nThe reservation system limits check-in time to 2 PM - 10 PM. Which test data set is most complete?\n\n```ts\nconst checkInWindow = { start: 14, end: 22 };\n```\n\nThink about the boundary set $[13, 14, 22, 23]$.",
+            "explanation": "This set includes values below, at, and above both ends of the allowed window.\n\n![Check-in Window](https://placehold.co/640x220/png?text=Check-in+Window)",
+            "correctOptionId": "bva-q5-c",
+            "orderIndex": 5,
+            "options": [
+              {
+                "id": "bva-q5-a",
+                "questionId": "bva-q5",
+                "label": "A",
+                "text": "`14, 15, 21, 22`"
+              },
+              {
+                "id": "bva-q5-b",
+                "questionId": "bva-q5",
+                "label": "B",
+                "text": "`12, 13, 14, 15`"
+              },
+              {
+                "id": "bva-q5-c",
+                "questionId": "bva-q5",
+                "label": "C",
+                "text": "`13, 14, 22, 23`"
+              },
+              {
+                "id": "bva-q5-d",
+                "questionId": "bva-q5",
+                "label": "D",
+                "text": "`15, 16, 17, 18`"
+              }
+            ]
+          }
+        ],
+        "sectionTitle": "Black Box Testing"
+      },
+      {
+        "id": "ep-shipping-fee",
+        "sectionId": "black-box-testing",
+        "title": "Equivalence Partitioning - Shipping Fee",
+        "description": "Group inputs and derive expected outcomes for shipping charges.",
+        "createdAt": "2026-06-25T16:23:46.710Z",
+        "updatedAt": "2026-06-25T16:23:46.710Z",
+        "questions": [
+          {
+            "id": "ep-q1",
+            "exerciseId": "ep-shipping-fee",
+            "prompt": "## Question 1\n\nThe shipping fee is free for orders above $100. Which partition is valid?\n\n```ts\nconst freeShippingThreshold = 100;\n```",
+            "explanation": "Equivalence partitioning divides inputs into valid and invalid classes.\n\n![Valid Partitions](https://placehold.co/640x220/png?text=Valid+Partitions)",
+            "correctOptionId": "ep-q1-b",
+            "orderIndex": 1,
+            "options": [
+              {
+                "id": "ep-q1-a",
+                "questionId": "ep-q1",
+                "label": "A",
+                "text": "Only orders worth `100`"
+              },
+              {
+                "id": "ep-q1-b",
+                "questionId": "ep-q1",
+                "label": "B",
+                "text": "Orders `<= 100` and orders `> 100`"
+              },
+              {
+                "id": "ep-q1-c",
+                "questionId": "ep-q1",
+                "label": "C",
+                "text": "Orders `1` to `10` only"
+              },
+              {
+                "id": "ep-q1-d",
+                "questionId": "ep-q1",
+                "label": "D",
+                "text": "Orders `100` and `200` only"
+              }
+            ]
+          },
+          {
+            "id": "ep-q2",
+            "exerciseId": "ep-shipping-fee",
+            "prompt": "## Question 2\n\nWhich formula describes the shipping fee rule if the base price is `p` and discount is `d`?\n\nUse $fee = p - d$ when the order is eligible for a discount.",
+            "explanation": "The formula should match the business rule exactly.\n\n![Shipping Formula](https://placehold.co/640x220/png?text=Shipping+Formula)",
+            "correctOptionId": "ep-q2-a",
+            "orderIndex": 2,
+            "options": [
+              {
+                "id": "ep-q2-a",
+                "questionId": "ep-q2",
+                "label": "A",
+                "text": "$fee = p - d$"
+              },
+              {
+                "id": "ep-q2-b",
+                "questionId": "ep-q2",
+                "label": "B",
+                "text": "$fee = p + d$"
+              },
+              {
+                "id": "ep-q2-c",
+                "questionId": "ep-q2",
+                "label": "C",
+                "text": "$fee = d - p$"
+              },
+              {
+                "id": "ep-q2-d",
+                "questionId": "ep-q2",
+                "label": "D",
+                "text": "$fee = p \\times d$"
+              }
+            ]
+          },
+          {
+            "id": "ep-q3",
+            "exerciseId": "ep-shipping-fee",
+            "prompt": "## Question 3\n\nA shipping calculator has these customer types. Which table best helps build equivalence classes?\n\n| Customer Type | Rule |\n| --- | --- |\n| Regular | Standard rate |\n| Premium | Discounted rate |\n\n![Customer Type Table](https://placehold.co/640x220/png?text=Customer+Type+Table)",
+            "explanation": "Tables help compare groups of inputs and identify valid partitions quickly.\n\n![Equivalence Classes](https://placehold.co/640x240/png?text=Equivalence+Classes)",
+            "correctOptionId": "ep-q3-d",
+            "orderIndex": 3,
+            "options": [
+              {
+                "id": "ep-q3-a",
+                "questionId": "ep-q3",
+                "label": "A",
+                "text": "Use only one customer type"
+              },
+              {
+                "id": "ep-q3-b",
+                "questionId": "ep-q3",
+                "label": "B",
+                "text": "Split by age only"
+              },
+              {
+                "id": "ep-q3-c",
+                "questionId": "ep-q3",
+                "label": "C",
+                "text": "Ignore the discount rule"
+              },
+              {
+                "id": "ep-q3-d",
+                "questionId": "ep-q3",
+                "label": "D",
+                "text": "Separate customers by rule-based groups"
+              }
+            ]
+          },
+          {
+            "id": "ep-q4",
+            "exerciseId": "ep-shipping-fee",
+            "prompt": "## Question 4\n\nWhich pair belongs to the same invalid partition for shipping weight limits?\n\n```ts\nconst maxWeight = 20;\n```",
+            "explanation": "Invalid partitions include values below the minimum and above the maximum.\n\n![Invalid Partition](https://placehold.co/640x220/png?text=Invalid+Partition)",
+            "correctOptionId": "ep-q4-c",
+            "orderIndex": 4,
+            "options": [
+              {
+                "id": "ep-q4-a",
+                "questionId": "ep-q4",
+                "label": "A",
+                "text": "`10` and `15`"
+              },
+              {
+                "id": "ep-q4-b",
+                "questionId": "ep-q4",
+                "label": "B",
+                "text": "`20` and `21`"
+              },
+              {
+                "id": "ep-q4-c",
+                "questionId": "ep-q4",
+                "label": "C",
+                "text": "`-1` and `21`"
+              },
+              {
+                "id": "ep-q4-d",
+                "questionId": "ep-q4",
+                "label": "D",
+                "text": "`5` and `20`"
+              }
+            ]
+          },
+          {
+            "id": "ep-q5",
+            "exerciseId": "ep-shipping-fee",
+            "prompt": "## Question 5\n\nThe system applies a weekend surcharge. Which input classes are most useful?\n\nConsider $weekday$ vs $weekend$ as the main classes.",
+            "explanation": "The important idea is to test representative members from each class.\n\n![Weekday Weekend Classes](https://placehold.co/640x220/png?text=Weekday+Weekend+Classes)",
+            "correctOptionId": "ep-q5-b",
+            "orderIndex": 5,
+            "options": [
+              {
+                "id": "ep-q5-a",
+                "questionId": "ep-q5",
+                "label": "A",
+                "text": "Only weekend dates"
+              },
+              {
+                "id": "ep-q5-b",
+                "questionId": "ep-q5",
+                "label": "B",
+                "text": "One weekday and one weekend date"
+              },
+              {
+                "id": "ep-q5-c",
+                "questionId": "ep-q5",
+                "label": "C",
+                "text": "Only public holidays"
+              },
+              {
+                "id": "ep-q5-d",
+                "questionId": "ep-q5",
+                "label": "D",
+                "text": "Only Monday and Friday"
+              }
+            ]
+          }
+        ],
+        "sectionTitle": "Black Box Testing"
+      }
+    ]
+  },
+  {
+    "id": "test-automation",
+    "title": "Test Automation",
+    "description": "Exercises focused on automation strategy, locators, and test stability.",
+    "exercises": [
+      {
+        "id": "locator-login-page",
+        "sectionId": "test-automation",
+        "title": "Locator Strategy - Login Page",
+        "description": "Choose stable locators for a login screen and related checks.",
+        "createdAt": "2026-06-25T16:23:46.713Z",
+        "updatedAt": "2026-06-25T16:23:46.713Z",
+        "questions": [
+          {
+            "id": "ta-q1",
+            "exerciseId": "locator-login-page",
+            "prompt": "## Question 1\n\nWhich locator is generally the most stable for a login button?\n\n```ts\nbutton[data-testid=\"login-button\"]\n```",
+            "explanation": "A test-id based selector is usually more stable than text or class-based locators.\n\n![Stable Locator](https://placehold.co/640x220/png?text=Stable+Locator)",
+            "correctOptionId": "ta-q1-c",
+            "orderIndex": 1,
+            "options": [
+              {
+                "id": "ta-q1-a",
+                "questionId": "ta-q1",
+                "label": "A",
+                "text": "XPath by absolute position"
+              },
+              {
+                "id": "ta-q1-b",
+                "questionId": "ta-q1",
+                "label": "B",
+                "text": "CSS class with random hash"
+              },
+              {
+                "id": "ta-q1-c",
+                "questionId": "ta-q1",
+                "label": "C",
+                "text": "Test id / data attribute"
+              },
+              {
+                "id": "ta-q1-d",
+                "questionId": "ta-q1",
+                "label": "D",
+                "text": "Text node only"
+              }
+            ]
+          },
+          {
+            "id": "ta-q2",
+            "exerciseId": "locator-login-page",
+            "prompt": "## Question 2\n\nWhat is the best assertion after a successful login?\n\nUse a reliable state check such as $Dashboard$ or a user-specific element.",
+            "explanation": "Assertions should verify a visible post-login state, not just a click action.\n\n![Post Login State](https://placehold.co/640x220/png?text=Post-Login+State)",
+            "correctOptionId": "ta-q2-b",
+            "orderIndex": 2,
+            "options": [
+              {
+                "id": "ta-q2-a",
+                "questionId": "ta-q2",
+                "label": "A",
+                "text": "Check the page title only"
+              },
+              {
+                "id": "ta-q2-b",
+                "questionId": "ta-q2",
+                "label": "B",
+                "text": "Verify the dashboard or profile element"
+              },
+              {
+                "id": "ta-q2-c",
+                "questionId": "ta-q2",
+                "label": "C",
+                "text": "Wait for 1 second"
+              },
+              {
+                "id": "ta-q2-d",
+                "questionId": "ta-q2",
+                "label": "D",
+                "text": "Refresh the page"
+              }
+            ]
+          },
+          {
+            "id": "ta-q3",
+            "exerciseId": "locator-login-page",
+            "prompt": "## Question 3\n\nWhich code sample is a good pattern for waiting until an element is visible?\n\n```ts\nawait page.getByRole(\"button\", { name: \"Login\" }).waitFor({ state: \"visible\" });\n```",
+            "explanation": "Explicit waits help reduce flakiness in automation tests.\n\n![Explicit Waits](https://placehold.co/640x220/png?text=Explicit+Waits)",
+            "correctOptionId": "ta-q3-a",
+            "orderIndex": 3,
+            "options": [
+              {
+                "id": "ta-q3-a",
+                "questionId": "ta-q3",
+                "label": "A",
+                "text": "Use an explicit wait for visibility"
+              },
+              {
+                "id": "ta-q3-b",
+                "questionId": "ta-q3",
+                "label": "B",
+                "text": "Use `Thread.sleep(5000)` everywhere"
+              },
+              {
+                "id": "ta-q3-c",
+                "questionId": "ta-q3",
+                "label": "C",
+                "text": "Click immediately and ignore errors"
+              },
+              {
+                "id": "ta-q3-d",
+                "questionId": "ta-q3",
+                "label": "D",
+                "text": "Reload the page repeatedly"
+              }
+            ]
+          },
+          {
+            "id": "ta-q4",
+            "exerciseId": "locator-login-page",
+            "prompt": "## Question 4\n\nWhich formula is useful when calculating retry attempts?\n\n$attempts = initial + retries$",
+            "explanation": "A retry strategy should clearly define the number of attempts.\n\n![Retry Strategy](https://placehold.co/640x220/png?text=Retry+Strategy)",
+            "correctOptionId": "ta-q4-d",
+            "orderIndex": 4,
+            "options": [
+              {
+                "id": "ta-q4-a",
+                "questionId": "ta-q4",
+                "label": "A",
+                "text": "$attempts = retries - initial$"
+              },
+              {
+                "id": "ta-q4-b",
+                "questionId": "ta-q4",
+                "label": "B",
+                "text": "$attempts = initial / retries$"
+              },
+              {
+                "id": "ta-q4-c",
+                "questionId": "ta-q4",
+                "label": "C",
+                "text": "$attempts = 0$"
+              },
+              {
+                "id": "ta-q4-d",
+                "questionId": "ta-q4",
+                "label": "D",
+                "text": "$attempts = initial + retries$"
+              }
+            ]
+          },
+          {
+            "id": "ta-q5",
+            "exerciseId": "locator-login-page",
+            "prompt": "## Question 5\n\nWhich artifact is most useful when reviewing an automation failure?\n\n```ts\nscreenshot.png\n```",
+            "explanation": "Screenshots and logs help identify whether the issue is locator, timing, or environment related.\n\n![Failure Artifacts](https://placehold.co/640x220/png?text=Failure+Artifacts)",
+            "correctOptionId": "ta-q5-b",
+            "orderIndex": 5,
+            "options": [
+              {
+                "id": "ta-q5-a",
+                "questionId": "ta-q5",
+                "label": "A",
+                "text": "Only the browser cache"
+              },
+              {
+                "id": "ta-q5-b",
+                "questionId": "ta-q5",
+                "label": "B",
+                "text": "Screenshot, logs, and DOM snapshot"
+              },
+              {
+                "id": "ta-q5-c",
+                "questionId": "ta-q5",
+                "label": "C",
+                "text": "A random timeout value"
+              },
+              {
+                "id": "ta-q5-d",
+                "questionId": "ta-q5",
+                "label": "D",
+                "text": "The desktop wallpaper"
+              }
+            ]
+          }
+        ],
+        "sectionTitle": "Test Automation"
+      },
+      {
+        "id": "form-stability-practice",
+        "sectionId": "test-automation",
+        "title": "Form Stability - Signup Flow",
+        "description": "Practice choosing stable checks for a signup form.",
+        "createdAt": "2026-06-25T16:23:46.717Z",
+        "updatedAt": "2026-06-25T16:23:46.717Z",
+        "questions": [
+          {
+            "id": "fs-q1",
+            "exerciseId": "form-stability-practice",
+            "prompt": "## Question 1\n\nWhich selector is best for a password input field?\n\n```ts\ninput[type=\"password\"][data-testid=\"password\"]\n```",
+            "explanation": "Combining type and test id makes the locator easier to maintain.\n\n![Password Field](https://placehold.co/640x220/png?text=Password+Field)",
+            "correctOptionId": "fs-q1-c",
+            "orderIndex": 1,
+            "options": [
+              {
+                "id": "fs-q1-a",
+                "questionId": "fs-q1",
+                "label": "A",
+                "text": "Absolute XPath"
+              },
+              {
+                "id": "fs-q1-b",
+                "questionId": "fs-q1",
+                "label": "B",
+                "text": "Dynamic class name"
+              },
+              {
+                "id": "fs-q1-c",
+                "questionId": "fs-q1",
+                "label": "C",
+                "text": "Type + test id"
+              },
+              {
+                "id": "fs-q1-d",
+                "questionId": "fs-q1",
+                "label": "D",
+                "text": "Index-based CSS only"
+              }
+            ]
+          },
+          {
+            "id": "fs-q2",
+            "exerciseId": "form-stability-practice",
+            "prompt": "## Question 2\n\nWhat should you verify after clicking Sign Up?\n\nA success banner or a redirected dashboard is ideal.",
+            "explanation": "The test should confirm the expected user state after submission.\n\n![Sign Up Success](https://placehold.co/640x220/png?text=Sign+Up+Success)",
+            "correctOptionId": "fs-q2-a",
+            "orderIndex": 2,
+            "options": [
+              {
+                "id": "fs-q2-a",
+                "questionId": "fs-q2",
+                "label": "A",
+                "text": "Success banner or redirect"
+              },
+              {
+                "id": "fs-q2-b",
+                "questionId": "fs-q2",
+                "label": "B",
+                "text": "Only that the button was clicked"
+              },
+              {
+                "id": "fs-q2-c",
+                "questionId": "fs-q2",
+                "label": "C",
+                "text": "The browser zoom level"
+              },
+              {
+                "id": "fs-q2-d",
+                "questionId": "fs-q2",
+                "label": "D",
+                "text": "The page source length"
+              }
+            ]
+          },
+          {
+            "id": "fs-q3",
+            "exerciseId": "form-stability-practice",
+            "prompt": "## Question 3\n\nWhich formula is helpful when validating form totals?\n\n$total = fields + errors$",
+            "explanation": "This kind of formula helps express the relationship between form input and validation states.\n\n![Form Validation](https://placehold.co/640x220/png?text=Form+Validation)",
+            "correctOptionId": "fs-q3-a",
+            "orderIndex": 3,
+            "options": [
+              {
+                "id": "fs-q3-a",
+                "questionId": "fs-q3",
+                "label": "A",
+                "text": "$total = fields + errors$"
+              },
+              {
+                "id": "fs-q3-b",
+                "questionId": "fs-q3",
+                "label": "B",
+                "text": "$total = fields - errors$"
+              },
+              {
+                "id": "fs-q3-c",
+                "questionId": "fs-q3",
+                "label": "C",
+                "text": "$total = fields \\times errors$"
+              },
+              {
+                "id": "fs-q3-d",
+                "questionId": "fs-q3",
+                "label": "D",
+                "text": "$total = errors$"
+              }
+            ]
+          },
+          {
+            "id": "fs-q4",
+            "exerciseId": "form-stability-practice",
+            "prompt": "## Question 4\n\nWhich test is most useful for catching layout regressions?\n\n```ts\nawait page.screenshot({ path: \"signup-form.png\" });\n```",
+            "explanation": "Visual checks can catch alignment and spacing problems quickly.\n\n![Visual Regression](https://placehold.co/640x220/png?text=Visual+Regression)",
+            "correctOptionId": "fs-q4-b",
+            "orderIndex": 4,
+            "options": [
+              {
+                "id": "fs-q4-a",
+                "questionId": "fs-q4",
+                "label": "A",
+                "text": "No assertion at all"
+              },
+              {
+                "id": "fs-q4-b",
+                "questionId": "fs-q4",
+                "label": "B",
+                "text": "Screenshot comparison"
+              },
+              {
+                "id": "fs-q4-c",
+                "questionId": "fs-q4",
+                "label": "C",
+                "text": "Only console output"
+              },
+              {
+                "id": "fs-q4-d",
+                "questionId": "fs-q4",
+                "label": "D",
+                "text": "Hardcoded sleep"
+              }
+            ]
+          },
+          {
+            "id": "fs-q5",
+            "exerciseId": "form-stability-practice",
+            "prompt": "## Question 5\n\nWhich data set is best for an email field?\n\nTest valid and invalid formats such as $user@example.com$ and `abc@`.",
+            "explanation": "Representative valid and invalid inputs help cover the main validation paths.\n\n![Email Validation](https://placehold.co/640x220/png?text=Email+Validation)",
+            "correctOptionId": "fs-q5-d",
+            "orderIndex": 5,
+            "options": [
+              {
+                "id": "fs-q5-a",
+                "questionId": "fs-q5",
+                "label": "A",
+                "text": "Only one valid email"
+              },
+              {
+                "id": "fs-q5-b",
+                "questionId": "fs-q5",
+                "label": "B",
+                "text": "Only one invalid email"
+              },
+              {
+                "id": "fs-q5-c",
+                "questionId": "fs-q5",
+                "label": "C",
+                "text": "Random text only"
+              },
+              {
+                "id": "fs-q5-d",
+                "questionId": "fs-q5",
+                "label": "D",
+                "text": "A mix of valid and invalid formats"
+              }
+            ]
+          }
+        ],
+        "sectionTitle": "Test Automation"
+      }
+    ]
+  }
+]
