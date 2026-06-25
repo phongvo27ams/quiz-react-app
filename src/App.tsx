@@ -19,6 +19,19 @@ type DraftQuestion = {
   options: { label: string; text: string }[];
 };
 
+async function loadSectionsData() {
+  try {
+    return await apiGet<Section[]>('/api/sections');
+  } catch {
+    const fallbackUrl = `${import.meta.env.BASE_URL}quiz-data.json`;
+    const response = await fetch(fallbackUrl);
+    if (!response.ok) {
+      throw new Error('Failed to load sections.');
+    }
+    return response.json() as Promise<Section[]>;
+  }
+}
+
 function createEmptyDraftQuestion(): DraftQuestion {
   return {
     prompt: '',
@@ -77,7 +90,7 @@ function App() {
     setLoading(true);
     setError('');
     try {
-      const data = await apiGet<Section[]>('/api/sections');
+      const data = await loadSectionsData();
       setSections(data);
     } catch {
       setError('Failed to load sections.');

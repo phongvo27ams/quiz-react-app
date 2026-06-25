@@ -84,7 +84,23 @@ If you deploy to GitHub Pages:
 - the React UI can be hosted there
 - the Express API and SQLite database cannot run there
 
-For a full working app with save/edit features, deploy the backend and database separately on a Node-hosting platform, then point the frontend to that API.
+To support quiz content on GitHub Pages, this repo exports the current Prisma data into `public/quiz-data.json` before build. The frontend falls back to that file when the API is unavailable.
+
+## GitHub Pages Deploy
+
+This repository includes a GitHub Actions workflow that deploys from `main` automatically.
+
+Flow:
+- push to `main`
+- install dependencies
+- generate Prisma client
+- push the Prisma schema
+- seed the local SQLite database in CI
+- export quiz data to `public/quiz-data.json`
+- build the Vite app
+- publish the `dist/` folder to GitHub Pages
+
+For the workflow to work, enable GitHub Pages in the repository settings and set the source to the `gh-pages` branch if your repo uses branch-based Pages deployment.
 
 ## License
 

@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
+    "export:data": "tsx scripts/export-data.ts",
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
