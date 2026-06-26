@@ -82,7 +82,8 @@ button {
   background: transparent;
   font-weight: 800;
   letter-spacing: 0.02em;
-  font-size: 1rem;
+  font-size: 2.24rem;
+  color: var(--blue-500);
 }
 
 .nav {
@@ -145,6 +146,7 @@ button {
   border: 1px solid var(--line);
   border-radius: var(--radius-box);
   box-shadow: 0 1rem 2.5rem rgba(53, 152, 219, 0.08);
+  margin-top: var(--space-4);
 }
 
 .hero,
@@ -200,6 +202,7 @@ p {
 
 .card {
   padding: var(--space-6);
+  margin-top: var(--space-5);
 }
 
 .meta {
@@ -341,6 +344,14 @@ p {
   max-width: 100%;
 }
 
+.question-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+}
+
 .question-number {
   font-weight: 700;
   display: block;
@@ -352,6 +363,81 @@ p {
   display: flex;
   gap: var(--space-3);
   flex-wrap: wrap;
+}
+
+.question-icon-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+}
+
+.icon-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.icon-btn svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.icon-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0.5rem 1rem rgba(23, 50, 77, 0.08);
+  background: #f8fcff;
+}
+
+.icon-btn.edit {
+  color: #1976d2;
+  border-color: rgba(25, 118, 210, 0.25);
+}
+
+.icon-btn.edit:hover {
+  background: rgba(25, 118, 210, 0.08);
+  border-color: rgba(25, 118, 210, 0.4);
+}
+
+.icon-btn.add {
+  color: #2e7d32;
+  border-color: rgba(46, 125, 50, 0.25);
+}
+
+.icon-btn.add:hover {
+  background: rgba(46, 125, 50, 0.08);
+  border-color: rgba(46, 125, 50, 0.4);
+}
+
+.icon-btn.copy {
+  color: #2e7d32;
+  border-color: rgba(46, 125, 50, 0.25);
+}
+
+.icon-btn.copy:hover {
+  background: rgba(46, 125, 50, 0.08);
+  border-color: rgba(46, 125, 50, 0.4);
+}
+
+.icon-btn.delete {
+  color: #d32f2f;
+  border-color: rgba(211, 47, 47, 0.25);
+}
+
+.icon-btn.delete:hover {
+  background: rgba(211, 47, 47, 0.08);
+  border-color: rgba(211, 47, 47, 0.4);
 }
 
 .form-grid {
@@ -519,6 +605,13 @@ p {
 
 .hljs {
   background: transparent !important;
+}
+
+.question-editor textarea,
+.question-editor .editor-option textarea,
+.question-editor select {
+  font-family: var(--font-code);
+  font-size: 0.8rem;
 }
 
 .form-grid .full {

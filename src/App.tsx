@@ -1,11 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCirclePlus, faCopy, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { apiGet, apiSend } from './api';
 import { RichText } from './richText';
 import type { Exercise, Question, Section } from './types';
 
 type View =
   | { name: 'home' }
-  | { name: 'section'; sectionTitle: string }
+  | { name: 'sections' }
+  | { name: 'section'; sectionId: string }
+  | { name: 'exercise'; exerciseId: string }
+  | { name: 'create' };
+
+type RouteView =
+  | { name: 'home' }
+  | { name: 'sections' }
+  | { name: 'section'; sectionId: string }
   | { name: 'exercise'; exerciseId: string }
   | { name: 'create' };
 
@@ -86,6 +96,33 @@ function shuffleArray<T>(items: T[]) {
   return shuffled;
 }
 
+function getViewFromPath(pathname: string): RouteView {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.length === 0) return { name: 'home' };
+  if (segments[0] === 'sections' && segments.length === 1) return { name: 'sections' };
+  if (segments[0] === 'sections' && segments[1]) return { name: 'section', sectionId: decodeURIComponent(segments[1]) };
+  if (segments[0] === 'exercises' && segments[1]) return { name: 'exercise', exerciseId: decodeURIComponent(segments[1]) };
+  if (segments[0] === 'create') return { name: 'create' };
+  return { name: 'home' };
+}
+
+function pathForView(view: RouteView) {
+  switch (view.name) {
+    case 'home':
+      return '/';
+    case 'sections':
+      return '/sections';
+    case 'section':
+      return `/sections/${encodeURIComponent(view.sectionId)}`;
+    case 'exercise':
+      return `/exercises/${encodeURIComponent(view.exerciseId)}`;
+    case 'create':
+      return '/create';
+    default:
+      return '/';
+  }
+}
+
 async function uploadMedia(file: File) {
   const formData = new FormData();
   formData.append('file', file);
@@ -109,7 +146,7 @@ async function deleteMedia(name: string) {
 }
 
 function App() {
-  const [view, setView] = useState<View>({ name: 'home' });
+  const [view, setView] = useState<View>(() => getViewFromPath(window.location.pathname));
   const [sections, setSections] = useState<Section[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -131,25 +168,41 @@ function App() {
     void loadSections();
   }, []);
 
+  useEffect(() => {
+    const onPopState = () => {
+      setView(getViewFromPath(window.location.pathname));
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  const navigate = (nextView: RouteView) => {
+    const nextPath = pathForView(nextView);
+    if (window.location.pathname !== nextPath) {
+      window.history.pushState({}, '', nextPath);
+    }
+    setView(nextView);
+  };
+
   const flatExercises = useMemo(() => sections.flatMap((section) => section.exercises), [sections]);
   const activeExercise = useMemo(
     () => (view.name === 'exercise' ? flatExercises.find((item) => item.id === view.exerciseId) : undefined),
     [flatExercises, view],
   );
   const activeSection = useMemo(
-    () => (view.name === 'section' ? sections.find((item) => item.title === view.sectionTitle) : undefined),
+    () => (view.name === 'section' ? sections.find((item) => item.id === view.sectionId) : undefined),
     [sections, view],
   );
 
   return (
     <div className="app-shell">
       <header className="topbar">
-        <button className="brand" onClick={() => setView({ name: 'home' })}>
+        <button className="brand" onClick={() => navigate({ name: 'home' })}>
           Software Testing
         </button>
         <nav className="nav">
-          <button onClick={() => setView({ name: 'home' })}>Sections</button>
-          <button onClick={() => setView({ name: 'create' })}>Create Exercise</button>
+          <button onClick={() => navigate({ name: 'sections' })}>Manage Sections</button>
+          <button onClick={() => navigate({ name: 'create' })}>Create Exercise</button>
         </nav>
       </header>
 
@@ -159,7 +212,16 @@ function App() {
             sections={sections}
             loading={loading}
             error={error}
-            onOpenSection={(sectionTitle) => setView({ name: 'section', sectionTitle })}
+            onOpenSectionList={() => navigate({ name: 'sections' })}
+            onRefresh={loadSections}
+          />
+        )}
+
+        {view.name === 'sections' && (
+          <SectionsPage
+            sections={sections}
+            onBack={() => navigate({ name: 'home' })}
+            onOpenSection={(sectionId) => navigate({ name: 'section', sectionId })}
             onRefresh={loadSections}
           />
         )}
@@ -167,8 +229,8 @@ function App() {
         {view.name === 'section' && activeSection && (
           <SectionPage
             section={activeSection}
-            onBack={() => setView({ name: 'home' })}
-            onOpenExercise={(exerciseId) => setView({ name: 'exercise', exerciseId })}
+            onBack={() => navigate({ name: 'home' })}
+            onOpenExercise={(exerciseId) => navigate({ name: 'exercise', exerciseId })}
           />
         )}
 
@@ -176,8 +238,11 @@ function App() {
           <ExercisePage
             sections={sections}
             exercise={activeExercise}
-            onBack={() => setView({ name: 'section', sectionTitle: activeExercise.sectionTitle })}
-            onOpenSection={(sectionTitle) => setView({ name: 'section', sectionTitle })}
+            onBack={() => {
+              const section = sections.find((item) => item.title === activeExercise.sectionTitle);
+              navigate({ name: 'section', sectionId: section?.id || '' });
+            }}
+            onOpenSection={(sectionId) => navigate({ name: 'section', sectionId })}
             onRefresh={loadSections}
           />
         )}
@@ -185,11 +250,11 @@ function App() {
         {view.name === 'create' && (
           <CreatePage
             sections={sections}
-            onBack={() => setView({ name: 'home' })}
+            onBack={() => navigate({ name: 'home' })}
             onCreate={async (payload) => {
               await apiSend('/api/exercises', 'POST', payload);
               await loadSections();
-              setView({ name: 'home' });
+              navigate({ name: 'home' });
             }}
           />
         )}
@@ -225,13 +290,13 @@ function HomePage({
   sections,
   loading,
   error,
-  onOpenSection,
+  onOpenSectionList,
   onRefresh,
 }: {
   sections: Section[];
   loading: boolean;
   error: string;
-  onOpenSection: (sectionTitle: string) => void;
+  onOpenSectionList: () => void;
   onRefresh: () => void;
 }) {
   return (
@@ -255,8 +320,8 @@ function HomePage({
             <h2>{section.title}</h2>
             <p>{section.description}</p>
             <p className="meta">{section.exercises.length} exercises</p>
-            <button className="primary" onClick={() => onOpenSection(section.title)}>
-              View exercises
+            <button className="primary" onClick={onOpenSectionList}>
+              Manage sections
             </button>
           </article>
         ))}
@@ -305,6 +370,153 @@ function SectionPage({
   );
 }
 
+function SectionsPage({
+  sections,
+  onBack,
+  onOpenSection,
+  onRefresh,
+}: {
+  sections: Section[];
+  onBack: () => void;
+  onOpenSection: (sectionId: string) => void;
+  onRefresh: () => void;
+}) {
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingSectionId, setEditingSectionId] = useState<string | null>(null);
+  const [draftTitle, setDraftTitle] = useState('');
+  const [draftDescription, setDraftDescription] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const cancel = () => {
+    setIsCreating(false);
+    setEditingSectionId(null);
+    setDraftTitle('');
+    setDraftDescription('');
+    setMessage('');
+  };
+
+  const startCreate = () => {
+    cancel();
+    setIsCreating(true);
+  };
+
+  const startEdit = (section: Section) => {
+    setIsCreating(false);
+    setEditingSectionId(section.id);
+    setDraftTitle(section.title);
+    setDraftDescription(section.description);
+    setMessage('');
+  };
+
+  const save = async () => {
+    setSaving(true);
+    setMessage('');
+    try {
+      if (!draftTitle.trim()) {
+        setMessage('Section title is required.');
+        return;
+      }
+      if (isCreating) {
+        await apiSend('/api/sections', 'POST', {
+          title: draftTitle.trim(),
+          description: draftDescription.trim(),
+        });
+      } else if (editingSectionId) {
+        await apiSend(`/api/sections/${editingSectionId}`, 'PUT', {
+          title: draftTitle.trim(),
+          description: draftDescription.trim(),
+        });
+      }
+      await onRefresh();
+      cancel();
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Failed to save section.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <section>
+      <Breadcrumb items={[{ label: 'Home', onClick: onBack }, { label: 'Sections' }]} />
+      <div className="page-head">
+        <div>
+          <p className="eyebrow">Sections</p>
+          <h1>Manage Sections</h1>
+          <p>Create, edit, and delete sections. A section cannot be deleted while it still has exercises.</p>
+        </div>
+        <div className="actions">
+          <button className="primary" onClick={startCreate}>
+            New Section
+          </button>
+          <button className="ghost" onClick={onBack}>
+            Back
+          </button>
+        </div>
+      </div>
+
+      {(isCreating || editingSectionId) && (
+        <section className="card">
+          <div className="form-grid">
+            <label className="full">
+              Section title
+              <input value={draftTitle} onChange={(e) => setDraftTitle(e.target.value)} />
+            </label>
+            <label className="full">
+              Description
+              <input value={draftDescription} onChange={(e) => setDraftDescription(e.target.value)} />
+            </label>
+          </div>
+          <div className="actions">
+            <button className="primary" onClick={save} disabled={saving}>
+              {saving ? 'Saving...' : 'Save Section'}
+            </button>
+            <button className="ghost" onClick={cancel}>
+              Cancel
+            </button>
+            {message && <div className="result">{message}</div>}
+          </div>
+        </section>
+      )}
+
+      <div className="stack">
+        {sections.map((section) => (
+          <article className="card" key={section.id}>
+            <p className="eyebrow">Section</p>
+            <h2>{section.title}</h2>
+            <p>{section.description}</p>
+            <p className="meta">{section.exercises.length} exercises</p>
+            <div className="actions">
+              <button className="primary" onClick={() => onOpenSection(section.id)}>
+                Open
+              </button>
+              <button className="ghost" onClick={() => startEdit(section)}>
+                Edit
+              </button>
+              <button
+                className="ghost danger"
+                onClick={async () => {
+                  const confirmed = window.confirm('Delete this section? This cannot be undone.');
+                  if (!confirmed) return;
+                  try {
+                    await apiSend(`/api/sections/${section.id}`, 'DELETE');
+                    await onRefresh();
+                  } catch (err) {
+                    setMessage(err instanceof Error ? err.message : 'Delete failed.');
+                  }
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ExercisePage({
   sections,
   exercise,
@@ -315,7 +527,7 @@ function ExercisePage({
   sections: Section[];
   exercise: Exercise;
   onBack: () => void;
-  onOpenSection: (sectionTitle: string) => void;
+  onOpenSection: (sectionId: string) => void;
   onRefresh: () => void;
 }) {
   const [answers, setAnswers] = useState<AnswerState>({});
@@ -353,13 +565,21 @@ function ExercisePage({
   }, 0);
   const total = exercise.questions.length;
   const percent = total === 0 ? 0 : Math.round((correctCount / total) * 100);
+  const currentSection = sections.find((item) => item.title === exercise.sectionTitle);
 
   return (
     <section>
       <Breadcrumb
         items={[
           { label: 'Home', onClick: onBack },
-          { label: exercise.sectionTitle, onClick: () => onOpenSection(exercise.sectionTitle) },
+          {
+            label: exercise.sectionTitle,
+            onClick: () => {
+              if (currentSection) {
+                onOpenSection(currentSection.id);
+              }
+            },
+          },
           { label: exercise.title },
         ]}
       />
@@ -445,7 +665,24 @@ function ExercisePage({
                   await onRefresh();
                   setQuestionEditId(null);
                 }}
+                onAddBelow={async () => {
+                  const created = await apiSend<Question>(`/api/exercises/${exercise.id}/questions`, 'POST', {
+                    afterQuestionId: question.id,
+                  });
+                  await onRefresh();
+                  setQuestionEditId(created.id);
+                }}
+                onCopy={async () => {
+                  const created = await apiSend<Question>(`/api/exercises/${exercise.id}/questions`, 'POST', {
+                    afterQuestionId: question.id,
+                    copyQuestionId: question.id,
+                  });
+                  await onRefresh();
+                  setQuestionEditId(created.id);
+                }}
                 onDelete={async () => {
+                  const confirmed = window.confirm('Delete this question?');
+                  if (!confirmed) return;
                   await apiSend(`/api/questions/${question.id}`, 'DELETE');
                   await onRefresh();
                 }}
@@ -553,6 +790,8 @@ function QuestionCard({
   onOpenEdit,
   onCancelEdit,
   onSave,
+  onAddBelow,
+  onCopy,
   onDelete,
   optionOrder,
   answer,
@@ -565,6 +804,8 @@ function QuestionCard({
   onOpenEdit: () => void;
   onCancelEdit: () => void;
   onSave: (payload: DraftQuestion) => Promise<void>;
+  onAddBelow: () => Promise<void>;
+  onCopy: () => Promise<void>;
   onDelete: () => Promise<void>;
   optionOrder: string[];
   answer?: string;
@@ -584,18 +825,26 @@ function QuestionCard({
     return (
       <article className="question">
         <div className="page-head compact">
-          <h3>Question {questionNumber}</h3>
+          <div className="question-title-row">
+            <h3>Question {questionNumber}</h3>
+            <div className="question-icon-actions">
+              <button className="icon-btn add" onClick={onAddBelow} title="Add question below" aria-label="Add question below">
+                <FontAwesomeIcon icon={faCirclePlus} />
+              </button>
+              <button className="icon-btn copy" onClick={onCopy} title="Copy question" aria-label="Copy question">
+                <FontAwesomeIcon icon={faCopy} />
+              </button>
+              <button className="icon-btn edit" onClick={onOpenEdit} title="Edit question" aria-label="Edit question">
+                <FontAwesomeIcon icon={faPenToSquare} />
+              </button>
+              <button className="icon-btn delete" onClick={onDelete} title="Delete question" aria-label="Delete question">
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </div>
+          </div>
           <div className="actions">
             <button className="ghost" onClick={onCancelEdit}>
               Cancel
-            </button>
-            <button
-              className="ghost danger"
-              onClick={async () => {
-                await onDelete();
-              }}
-            >
-              Delete
             </button>
           </div>
         </div>
@@ -627,13 +876,24 @@ function QuestionCard({
     <article className="question">
       <div className="question-head">
         <div className="question-title">
-          <div className="question-number">Question {questionNumber}</div>
+          <div className="question-title-row">
+            <div className="question-number">Question {questionNumber}</div>
+            <div className="question-icon-actions">
+              <button className="icon-btn add" onClick={onAddBelow} title="Add question below" aria-label="Add question below">
+                <FontAwesomeIcon icon={faCirclePlus} />
+              </button>
+              <button className="icon-btn copy" onClick={onCopy} title="Copy question" aria-label="Copy question">
+                <FontAwesomeIcon icon={faCopy} />
+              </button>
+              <button className="icon-btn edit" onClick={onOpenEdit} title="Edit question" aria-label="Edit question">
+                <FontAwesomeIcon icon={faPenToSquare} />
+              </button>
+              <button className="icon-btn delete" onClick={onDelete} title="Delete question" aria-label="Delete question">
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </div>
+          </div>
           <RichText value={question.prompt} />
-        </div>
-        <div className="actions">
-          <button className="ghost" onClick={onOpenEdit}>
-            Edit
-          </button>
         </div>
       </div>
 
@@ -698,7 +958,7 @@ function QuestionEditorPanel({
   saveMessage: string;
 }) {
   return (
-    <>
+    <div className="question-editor">
       <label>
         Question prompt
         <textarea value={draft.prompt} onChange={(e) => onChangeDraft((current) => ({ ...current, prompt: e.target.value }))} rows={5} />
@@ -764,7 +1024,7 @@ function QuestionEditorPanel({
         </button>
         {saveMessage && <div className="result">{saveMessage}</div>}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -1053,16 +1313,22 @@ function CreatePage({
   sections: Section[];
   onBack: () => void;
   onCreate: (payload: {
-    sectionTitle: string;
+    sectionId: string;
     title: string;
     description: string;
     questions: DraftQuestion[];
   }) => Promise<void>;
 }) {
-  const [sectionTitle, setSectionTitle] = useState(sections[0]?.title || 'Black Box Testing');
+  const [sectionId, setSectionId] = useState(sections[0]?.id || '');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [questions, setQuestions] = useState<DraftQuestion[]>([createEmptyDraftQuestion()]);
+
+  useEffect(() => {
+    if (!sectionId && sections[0]?.id) {
+      setSectionId(sections[0].id);
+    }
+  }, [sections, sectionId]);
 
   const submit = async () => {
     const cleanQuestions = questions.filter(
@@ -1073,7 +1339,7 @@ function CreatePage({
     );
     if (!title.trim() || cleanQuestions.length === 0) return;
     await onCreate({
-      sectionTitle,
+      sectionId,
       title: title.trim(),
       description: description.trim(),
       questions: cleanQuestions,
@@ -1096,11 +1362,14 @@ function CreatePage({
 
       <ExerciseEditor
         sections={sections}
-        sectionTitle={sectionTitle}
+        sectionTitle={sections.find((section) => section.id === sectionId)?.title || ''}
         title={title}
         description={description}
         questions={questions}
-        onChangeSectionTitle={setSectionTitle}
+        onChangeSectionTitle={(value) => {
+          const matched = sections.find((section) => section.title === value);
+          setSectionId(matched?.id || '');
+        }}
         onChangeTitle={setTitle}
         onChangeDescription={setDescription}
         onChangeQuestions={setQuestions}

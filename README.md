@@ -14,6 +14,8 @@ It supports:
   - Images
 - Exercise creation and editing
 - Score summary at the end of an exercise
+- Full-stack deployment support with PostgreSQL + Neon and Vercel
+- Media uploads that can use local storage in development or ImageKit in production
 
 ## Tech Stack
 
@@ -21,7 +23,9 @@ It supports:
 - Styling: Plain CSS with shared design tokens
 - Content rendering: Markdown, KaTeX, Highlight.js
 - Backend: Node.js + Express
-- Database: Prisma + SQLite
+- Database: Prisma + PostgreSQL
+- Production hosting: Vercel
+- Media storage: ImageKit or local disk in development
 
 ## Project Structure
 
@@ -39,13 +43,15 @@ npm install
 
 ### 2. Set up the database
 
-The project uses SQLite locally through Prisma.
+The project uses PostgreSQL locally through Prisma and the same PostgreSQL schema on Neon in production.
 
 ```bash
 npx prisma generate --no-engine
 npx prisma db push
 npm run seed
 ```
+
+Set `DATABASE_URL` in `.env` before running the commands.
 
 ### 3. Start the app
 
@@ -67,12 +73,13 @@ Open the URL shown in the terminal.
 - `npm run build` - build the frontend for production
 - `npm run seed` - populate the database with sample sections and exercises
 - `npm run prisma:generate` - generate Prisma Client
-- `npm run prisma:push` - push the Prisma schema to the local SQLite database
+- `npm run prisma:push` - push the Prisma schema to the configured PostgreSQL database
 
 ## Database Notes
 
-- The local database is stored in `prisma/dev.db`
-- The database file is ignored by Git
+- The app now uses PostgreSQL through `DATABASE_URL`
+- For local development you can use a local PostgreSQL instance
+- For production on Vercel, point `DATABASE_URL` to Neon
 - Schema changes should be made in `prisma/schema.prisma`
 - Sample data is generated through `prisma/seed.ts`
 
@@ -85,6 +92,12 @@ If you deploy to GitHub Pages:
 - the Express API and SQLite database cannot run there
 
 To support quiz content on GitHub Pages, this repo exports the current Prisma data into `public/quiz-data.json` before build. The frontend falls back to that file when the API is unavailable.
+
+For a full-stack deployment, use Vercel:
+- the frontend is built from Vite
+- the API runs as a serverless function from `api/index.ts`
+- Prisma connects to Neon through `DATABASE_URL`
+- media uploads can go to ImageKit if `IMAGEKIT_*` env vars are configured
 
 ## GitHub Pages Deploy
 
@@ -101,6 +114,28 @@ Flow:
 - publish the `dist/` folder to GitHub Pages
 
 For the workflow to work, enable GitHub Pages in the repository settings and set the source to the `gh-pages` branch if your repo uses branch-based Pages deployment.
+
+## Media Storage
+
+By default, uploaded media is saved to the local `public/media/` folders during development.
+
+To use ImageKit in production, set:
+
+- `IMAGEKIT_PUBLIC_KEY`
+- `IMAGEKIT_PRIVATE_KEY`
+- `IMAGEKIT_URL_ENDPOINT`
+
+When those variables are present, uploads go to ImageKit instead of the local filesystem.
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and fill in:
+
+- `DATABASE_URL`
+- `PORT`
+- `IMAGEKIT_PUBLIC_KEY`
+- `IMAGEKIT_PRIVATE_KEY`
+- `IMAGEKIT_URL_ENDPOINT`
 
 ## License
 

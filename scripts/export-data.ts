@@ -1,8 +1,10 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadEnv } from './load-env';
 import { prisma } from '../server/db';
 
+loadEnv();
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const publicDir = path.join(rootDir, 'public');
 const outputFile = path.join(publicDir, 'quiz-data.json');
