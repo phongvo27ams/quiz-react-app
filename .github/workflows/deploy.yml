@@ -36,6 +36,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Rollup Linux binary workaround
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.62.2
+
       - name: Build site
         env:
           GITHUB_PAGES: 'true'
