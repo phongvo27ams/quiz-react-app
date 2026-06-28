@@ -4,7 +4,6 @@ import remarkMath from 'remark-math';
 import rehypeRaw from 'rehype-raw';
 import rehypeKatex from 'rehype-katex';
 import rehypeHighlight from 'rehype-highlight';
-import rehypeSlug from 'rehype-slug';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCircleInfo,
@@ -28,7 +27,7 @@ function headingRenderer(level: 1 | 2 | 3, idPrefix = '') {
     const text = Array.isArray(children) ? children.join(' ') : String(children ?? '');
     const Tag = `h${level}` as const;
     return (
-      <Tag id={`${idPrefix}${slugify(text)}`} {...props}>
+      <Tag {...props} id={`${idPrefix}${slugify(text)}`}>
         {children}
       </Tag>
     );
@@ -115,7 +114,7 @@ export function RichText({ value, idPrefix = '' }: { value: string; idPrefix?: s
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm, remarkMath]}
-      rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight, rehypeSlug]}
+      rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
       components={{
         h1: headingRenderer(1, idPrefix),
         h2: headingRenderer(2, idPrefix),

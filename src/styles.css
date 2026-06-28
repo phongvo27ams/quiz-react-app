@@ -308,6 +308,40 @@ img {
   max-width: 70rem;
 }
 
+.contents-tree ol {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.contents-tree li {
+  margin: 0.35rem 0;
+}
+
+.contents-tree a {
+  color: var(--ink);
+}
+
+.contents-tree .toc-level-1 > a {
+  font-weight: 700;
+}
+
+.contents-tree .toc-level-2 {
+  margin-left: 1rem;
+}
+
+.contents-tree .toc-level-2 > a {
+  color: var(--muted);
+}
+
+.contents-tree .toc-level-3 {
+  margin-left: 2rem;
+}
+
+.contents-tree .toc-level-3 > a {
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
 .book-article {
   min-width: 0;
   width: 100%;
