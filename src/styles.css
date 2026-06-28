@@ -22,6 +22,7 @@
   --surface-soft: #f9fcff;
   --surface-softer: #fbfdff;
   --surface-muted: #f7fbff;
+  --surface-inline-code: rgba(var(--brand-rgb), 0.15);
   --surface-note: #fcfcfd;
   --surface-tip: #eaf8f0;
   --surface-info: #eef8fc;
@@ -39,6 +40,8 @@
   --cover-glow: radial-gradient(circle, rgba(var(--brand-rgb), 0.16), transparent 68%);
   --brand-border-soft: rgba(var(--brand-rgb), 0.18);
   --brand-border-strong: rgba(var(--brand-rgb), 0.2);
+  --brand-border-inline: rgba(var(--brand-rgb), 0.28);
+  --brand-border-technical: rgba(var(--brand-rgb), 0.8);
   --brand-fill-soft: rgba(var(--brand-rgb), 0.08);
   --surface-overlay: rgba(var(--white-rgb), 0.9);
   --shadow-brand-soft: 0 1.25rem 2.5rem rgba(var(--brand-rgb), 0.1);
@@ -117,7 +120,7 @@ img {
 }
 
 .book-shell {
-  width: min(76rem, calc(100% - 1.5rem));
+  width: min(56rem, calc(100% - 1.5rem));
   margin: 0 auto;
   padding: 0 1.5rem 3rem;
 }
@@ -594,7 +597,7 @@ p {
 
 .md-table th,
 .md-table td {
-  border: 1px solid var(--line);
+  border: 1px solid var(--brand-border-technical);
   padding: 0.55rem 0.75rem;
   text-align: left;
   vertical-align: top;
@@ -606,9 +609,9 @@ pre {
   max-width: 100%;
   overflow-x: visible;
   overflow-wrap: anywhere;
-  padding: 0.7rem 0.85rem;
+  padding: 0.4rem;
   border-radius: var(--radius-box);
-  border: 1px solid var(--line);
+  border: 1px solid var(--brand-border-technical);
   background: var(--surface);
   margin: 1rem 0;
   box-sizing: border-box;
@@ -624,6 +627,22 @@ samp {
 
 code {
   font-size: 0.8rem;
+}
+
+p code,
+li code,
+blockquote code,
+td code,
+th code,
+.md-callout-body code,
+.cover-panel code,
+.cover-meta code {
+  display: inline;
+  padding: 0.08rem 0.3rem;
+  border-radius: 0.35rem;
+  background: var(--surface-inline-code);
+  color: var(--ink);
+  white-space: normal;
 }
 
 pre code {

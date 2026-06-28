@@ -13,7 +13,7 @@ import {
   faFireFlameCurved,
 } from '@fortawesome/free-solid-svg-icons';
 import 'katex/dist/katex.min.css';
-import 'highlight.js/styles/github.css';
+import 'highlight.js/styles/vs.css';
 
 function slugify(value: string) {
   return value

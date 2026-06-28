@@ -1,0 +1,152 @@
+## Equivalence Partitioning
+
+### Exercise: Movie Ticket Booking
+
+A movie ticket booking system allows customers to reserve tickets by entering two pieces of information:
+
+| Data field | Description | Valid values |
+|---|---|---|
+| `Age` | The age of the customer | `Child`, `Adult`, `Senior` |
+| `Seat type` | The type of seat selected by the customer | `S`, `P` |
+
+The system must validate the inputs according to the following rules:
+
+- Age group:
+  - Customers aged from `6` to `12` are classified as `Child`.
+  - Customers aged from `13` to `59` are classified as `Adult`.
+  - Customers aged from `60` to `80` are classified as `Senior`.
+  - Any age less than `6` is invalid, or greater than `80` is invalid.
+- Seat type:
+  - `Standard` seats are entered as `S`.
+  - `Premium` seats are entered as `P`.
+  - If no seat type is selected, the system must display an error message.
+  - If the user enters any value other than `S` or `P`, the system must display an error message.
+- The booking is accepted only when both `Age` and `Seat type` are valid.
+
+#### Question
+
+Using Equivalence Class Partitioning (ECP), design test sets for the system above by applying the following four techniques in order: Weak Normal ECP, Strong Normal ECP, Weak Robust ECP, and Strong Robust ECP.
+
+For each technique:
+
+- Explain how to determine the number of generated test cases.
+- Identify the equivalence classes used for each input.
+- Present the test cases in table form.
+- For Strong Robust ECP, only present a few representative test cases.
+
+:::tip
+Start by separating the input domain into valid and invalid equivalence classes.
+
+- For **Weak Normal ECP**, select one representative from each valid class and make sure every valid class appears at least once.
+- For **Weak Robust ECP**, include both valid and invalid classes, but still only require each class to appear at least once.
+- For **Strong Normal ECP**, combine all valid classes across all inputs so that every valid class is paired with every other valid class.
+- For **Strong Robust ECP**, combine all valid and invalid classes across all inputs, which produces the largest set.
+
+A practical way to solve the question is to list the classes first, then decide whether the technique needs one representative per class or every possible combination.
+:::
+
+#### Sample Answer
+
+To design ECP test sets, we first identify the equivalence classes for each input variable:
+
+| Variable | Equivalence classe | Value | Type |
+|---|---|---|---|
+| Age group | EC1 | 6-12 | Valid: `Child` |
+| Age group | EC2 | 13-59 | Valid: `Adult` |
+| Age group | EC3 | 60-80 | Valid: `Senior` |
+| Age group | EC4 | < 6 | Invalid |
+| Age group | EC5 | > 80 | Invalid |
+| Seat type | EC6 | S | Valid: `Standard` |
+| Seat type | EC7 | P | Valid: `Premium` |
+| Seat type | EC8 | Blank | Invalid |
+| Seat type | EC9 | X | Invalid |
+
+The system accepts the booking only when both inputs belong to valid equivalence classes.
+
+##### Weak Normal ECP
+
+Weak means we do not need to test every combination. Normal means we use only valid classes.
+
+We need to cover all valid classes at least once: EC1, EC2, EC3, EC6, EC7. One suitable test set is:
+
+| Test case | Age group | Seat type | Covered classes |
+|---|---:|---:|---|
+| TC-001 | 8 | S | EC1, EC6 |
+| TC-002 | 25 | P | EC2, EC7 |
+| TC-003 | 65 | S | EC3, EC6 |
+
+Weak Normal ECP requires 3 test cases in this example.
+
+##### Weak Robust ECP
+
+Weak means we do not need to test every combination. Robust means we include both valid and invalid classes.
+
+We need to cover all classes at least once. One suitable test set is:
+
+| Test case | Age group | Seat type | Covered classes |
+|---|---:|---:|---|
+| TC-001 | 8 | S | EC1, EC6 |
+| TC-002 | 25 | P | EC2, EC7 |
+| TC-003 | 65 | S | EC3, EC6 |
+| TC-004 | 5 | S | EC4, EC6 |
+| TC-005 | 81 | P | EC5, EC7 |
+| TC-006 | 25 | Blank | EC2, EC8 |
+| TC-007 | 25 | X | EC2, EC9 |
+
+Weak Robust ECP requires 7 test cases in this example.
+
+##### Strong Normal ECP
+
+Strong means we test all combinations. Normal still means we use only valid classes.
+
+There are 3 valid age classes and 2 valid seat classes, so the number of test cases is:
+
+$$
+3 \times 2 = 6 \text{ test cases}
+$$
+
+The test set is:
+
+| Test case | Age group | Seat type | Expected result |
+|---|---:|---:|---|
+| TC-001 | 8 | S | Valid: Child, Standard |
+| TC-002 | 8 | P | Valid: Child, Premium |
+| TC-003 | 25 | S | Valid: Adult, Standard |
+| TC-004 | 25 | P | Valid: Adult, Premium |
+| TC-005 | 65 | S | Valid: Senior, Standard |
+| TC-006 | 65 | P | Valid: Senior, Premium |
+
+##### Strong Robust ECP
+
+Strong means we test all combinations. Robust means we include both valid and invalid classes.
+
+There are 5 age classes and 4 seat classes, so the number of test cases is:
+
+$$
+5 \times 4 = 20 \text{ test cases}
+$$
+
+The full set is large, so only a few representative test cases are shown:
+
+| Test case | Age group | Seat type | Expected result |
+|---|---:|---:|---|
+| TC-001 | 5 | S | Invalid: Under 6, Standard |
+| TC-002 | 5 | P | Invalid: Under 6, Premium |
+| TC-003 | 5 | Blank | Invalid: Under 6, Missing seat type |
+| TC-004 | 5 | X | Invalid: Under 6, Invalid seat type |
+| TC-005 | 8 | S | Valid: Child, Standard |
+| TC-006 | 8 | P | Valid: Child, Premium |
+| TC-007 | 8 | Blank | Invalid: Child, Missing seat type |
+| TC-008 | 8 | X | Invalid: Child, Invalid seat type |
+| TC-009 | 25 | S | Valid: Adult, Standard |
+| TC-010 | 25 | P | Valid: Adult, Premium |
+| TC-011 | 25 | Blank | Invalid: Adult, Missing seat type |
+| TC-012 | 25 | X | Invalid: Adult, Invalid seat type |
+| TC-013 | 65 | S | Valid: Senior, Standard |
+| TC-014 | 65 | P | Valid: Senior, Premium |
+| TC-015 | 65 | Blank | Invalid: Senior, Missing seat type |
+| TC-016 | 65 | X | Invalid: Senior, Invalid seat type |
+| TC-017 | 81 | S | Invalid: Over 80, Standard |
+| TC-018 | 81 | P | Invalid: Over 80, Premium |
+| TC-019 | 81 | Blank | Invalid: Over 80, Missing seat type |
+| TC-020 | 81 | X | Invalid: Over 80, Invalid seat type |

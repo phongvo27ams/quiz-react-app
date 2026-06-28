@@ -1,0 +1,200 @@
+### Exercise: Seminar Registration System
+
+A university academic seminar registration system allows users to enter the following information:
+
+| Data field | Description | Valid range |
+|---|---|---|
+| `Age` | Age of the participant | `18 <= Age <= 65` |
+| `Experience` | Years of research experience | `0 <= Experience <= 40` |
+| `Registration Days Before Event` | Number of days before the seminar date that the user registers | `1 <= Registration Days Before Event <= 180` |
+| `Number of Workshops` | Number of workshops the user wants to attend | `1 <= Number of Workshops <= 10` |
+
+The system applies the following validation rules:
+
+- If `Age` is less than 18 or greater than 65, the registration must be rejected and an error message displayed.
+- If `Experience` is less than 0 or greater than 40, the registration must be rejected and an error message displayed.
+- If `Registration Days Before Event` is less than 1 or greater than 180, the registration must be rejected and an error message displayed.
+- If `Number of Workshops` is less than 1 or greater than 10, the registration must be rejected and an error message displayed.
+- The registration is accepted only when all fields are within their valid ranges.
+
+Assume the following nominal values:
+
+- `Age = 30`
+- `Experience = 10`
+- `Registration Days Before Event = 90`
+- `Number of Workshops = 5`
+
+#### Question
+
+Using Boundary Value Analysis (BVA), design test sets for the system above by applying the following four methods in order: Normal BVA, Robust BVA, Worst-case BVA, and Robust Worst-case BVA.
+
+For each method:
+
+- Explain how to calculate the number of generated test cases.
+- Identify the test values selected for each variable.
+- Present the test cases in table form.
+- For Worst-case BVA and Robust Worst-case BVA, only present a few representative test cases.
+
+:::tip
+Start by listing the valid range and nominal value of each input variable.
+
+- For **Normal BVA**, choose the boundary values and the values just inside the boundary, then vary one variable at a time while keeping the others at nominal values.
+- For **Robust BVA**, add the values just outside each valid boundary so you can test both valid and invalid edge cases.
+- For **Worst-case BVA**, take all combinations of the selected valid boundary values across all variables.
+- For **Robust Worst-case BVA**, take all combinations of the valid, near-boundary, and out-of-range values across all variables.
+
+A useful shortcut is to calculate the test case count first, then build the table row by row from the selected value sets.
+:::
+
+#### Sample Answer
+
+To design BVA test sets, we first identify the valid ranges, the nominal values, and the boundary values for each input variable.
+
+There are 4 input variables:
+
+| Variable | Valid range | Nominal value |
+|---|---|---:|
+| `Age` | 18 to 65 | 30 |
+| `Experience` | 0 to 40 | 10 |
+| `Registration Days Before Event` | 1 to 180 | 90 |
+| `Number of Workshops` | 1 to 10 | 5 |
+
+The system accepts the registration only when all variables are valid. If one or more variables are invalid, the system displays the corresponding error.
+
+##### Normal BVA
+
+Normal BVA checks valid boundary values and near-boundary valid values. Only one variable is changed at a time while the other variables remain at nominal values.
+
+For each variable, choose 5 values:
+
+| Variable | Normal BVA values |
+|---|---|
+| `Age` | 18, 19, 30, 64, 65 |
+| `Experience` | 0, 1, 10, 39, 40 |
+| `Registration Days Before Event` | 1, 2, 90, 179, 180 |
+| `Number of Workshops` | 1, 2, 5, 9, 10 |
+
+$$
+4n + 1 = 4 \times 4 + 1 = 17 \text{ test cases}
+$$
+
+The test set is:
+
+| Test case | Age | Experience | Registration Days | Workshops | Expected result |
+|---|---:|---:|---:|---:|---|
+| TC-001 | 30 | 10 | 90 | 5 | Accept registration |
+| TC-002 | 18 | 10 | 90 | 5 | Accept registration |
+| TC-003 | 19 | 10 | 90 | 5 | Accept registration |
+| TC-004 | 64 | 10 | 90 | 5 | Accept registration |
+| TC-005 | 65 | 10 | 90 | 5 | Accept registration |
+| TC-006 | 30 | 0 | 90 | 5 | Accept registration |
+| TC-007 | 30 | 1 | 90 | 5 | Accept registration |
+| TC-008 | 30 | 39 | 90 | 5 | Accept registration |
+| TC-009 | 30 | 40 | 90 | 5 | Accept registration |
+| TC-010 | 30 | 10 | 1 | 5 | Accept registration |
+| TC-011 | 30 | 10 | 2 | 5 | Accept registration |
+| TC-012 | 30 | 10 | 179 | 5 | Accept registration |
+| TC-013 | 30 | 10 | 180 | 5 | Accept registration |
+| TC-014 | 30 | 10 | 90 | 1 | Accept registration |
+| TC-015 | 30 | 10 | 90 | 2 | Accept registration |
+| TC-016 | 30 | 10 | 90 | 9 | Accept registration |
+| TC-017 | 30 | 10 | 90 | 10 | Accept registration |
+
+##### Robust BVA
+
+Robust BVA checks both valid values and invalid values just outside the boundaries. Only one variable is changed at a time while the others remain at nominal values.
+
+| Variable | Robust BVA values |
+|---|---|
+| `Age` | 17, 18, 19, 30, 64, 65, 66 |
+| `Experience` | -1, 0, 1, 10, 39, 40, 41 |
+| `Registration Days Before Event` | 0, 1, 2, 90, 179, 180, 181 |
+| `Number of Workshops` | 0, 1, 2, 5, 9, 10, 11 |
+
+$$
+6n + 1 = 6 \times 4 + 1 = 25 \text{ test cases}
+$$
+
+The test set is:
+
+| Test case | Age | Experience | Registration Days | Workshops | Expected result |
+|---|---:|---:|---:|---:|---|
+| TC-001 | 30 | 10 | 90 | 5 | Accept registration |
+| TC-002 | 17 | 10 | 90 | 5 | Error: invalid `Age` |
+| TC-003 | 18 | 10 | 90 | 5 | Accept registration |
+| TC-004 | 19 | 10 | 90 | 5 | Accept registration |
+| TC-005 | 64 | 10 | 90 | 5 | Accept registration |
+| TC-006 | 65 | 10 | 90 | 5 | Accept registration |
+| TC-007 | 66 | 10 | 90 | 5 | Error: invalid `Age` |
+| TC-008 | 30 | -1 | 90 | 5 | Error: invalid `Experience` |
+| TC-009 | 30 | 0 | 90 | 5 | Accept registration |
+| TC-010 | 30 | 1 | 90 | 5 | Accept registration |
+| TC-011 | 30 | 39 | 90 | 5 | Accept registration |
+| TC-012 | 30 | 40 | 90 | 5 | Accept registration |
+| TC-013 | 30 | 41 | 90 | 5 | Error: invalid `Experience` |
+| TC-014 | 30 | 10 | 0 | 5 | Error: invalid `Registration Days Before Event` |
+| TC-015 | 30 | 10 | 1 | 5 | Accept registration |
+| TC-016 | 30 | 10 | 2 | 5 | Accept registration |
+| TC-017 | 30 | 10 | 179 | 5 | Accept registration |
+| TC-018 | 30 | 10 | 180 | 5 | Accept registration |
+| TC-019 | 30 | 10 | 181 | 5 | Error: invalid `Registration Days Before Event` |
+| TC-020 | 30 | 10 | 90 | 0 | Error: invalid `Number of Workshops` |
+| TC-021 | 30 | 10 | 90 | 1 | Accept registration |
+| TC-022 | 30 | 10 | 90 | 2 | Accept registration |
+| TC-023 | 30 | 10 | 90 | 9 | Accept registration |
+| TC-024 | 30 | 10 | 90 | 10 | Accept registration |
+| TC-025 | 30 | 10 | 90 | 11 | Error: invalid `Number of Workshops` |
+
+##### Worst-case BVA
+
+Worst-case BVA uses the same valid boundary values as Normal BVA, but tests all combinations among the variables by taking the Cartesian product of the valid boundary values.
+
+| Variable | Value set |
+|---|---|
+| `Age` | 18, 19, 30, 64, 65 |
+| `Experience` | 0, 1, 10, 39, 40 |
+| `Registration Days Before Event` | 1, 2, 90, 179, 180 |
+| `Number of Workshops` | 1, 2, 5, 9, 10 |
+
+$$
+5^n = 5^4 = 625 \text{ test cases}
+$$
+
+Because the number of combinations is large, only a few representative test cases are shown:
+
+| Test case | Age | Experience | Registration Days | Workshops | Expected result |
+|---|---:|---:|---:|---:|---|
+| TC-001 | 18 | 0 | 1 | 1 | Accept registration |
+| TC-002 | 18 | 0 | 1 | 2 | Accept registration |
+| TC-003 | 18 | 0 | 1 | 5 | Accept registration |
+| TC-004 | 30 | 10 | 90 | 5 | Accept registration |
+| TC-005 | 64 | 39 | 179 | 9 | Accept registration |
+| TC-006 | 65 | 40 | 180 | 10 | Accept registration |
+
+##### Robust Worst-case BVA
+
+Robust Worst-case BVA uses both valid values and invalid values near the boundaries, and it tests all combinations among the variables.
+
+| Variable | Value set |
+|---|---|
+| `Age` | 17, 18, 19, 30, 64, 65, 66 |
+| `Experience` | -1, 0, 1, 10, 39, 40, 41 |
+| `Registration Days Before Event` | 0, 1, 2, 90, 179, 180, 181 |
+| `Number of Workshops` | 0, 1, 2, 5, 9, 10, 11 |
+
+$$
+7^n = 7^4 = 2401 \text{ test cases}
+$$
+
+Because the number of combinations is very large, only a few representative test cases are shown:
+
+| Test case | Age | Experience | Registration Days | Workshops | Expected result |
+|---|---:|---:|---:|---:|---|
+| TC-001 | 17 | -1 | 0 | 0 | Error: invalid `Age`, `Experience`, `Registration Days Before Event`, `Number of Workshops` |
+| TC-002 | 17 | 10 | 90 | 5 | Error: invalid `Age` |
+| TC-003 | 30 | -1 | 90 | 5 | Error: invalid `Experience` |
+| TC-004 | 30 | 10 | 0 | 5 | Error: invalid `Registration Days Before Event` |
+| TC-005 | 30 | 10 | 90 | 0 | Error: invalid `Number of Workshops` |
+| TC-006 | 18 | 0 | 1 | 1 | Accept registration |
+| TC-007 | 65 | 40 | 180 | 10 | Accept registration |
+| TC-008 | 66 | 41 | 181 | 11 | Error: invalid `Age`, `Experience`, `Registration Days Before Event`, `Number of Workshops` |
