@@ -1,5 +1,5 @@
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
-import { RichText } from './richText';
+import { MarkdownRenderer } from './markdownRenderer';
 import bookOrder from '../book-order.json';
 
 type DocRecord = {
@@ -249,7 +249,7 @@ function LazyDocSection({
     <section className="chapter" id={outline.anchor} key={doc.path} ref={sectionRef}>
       <div className="chapter-body doc-page">
         {isReady || printMode ? (
-          <RichText value={doc.content} idPrefix={docId} labels={outline.labels} />
+          <MarkdownRenderer value={doc.content} idPrefix={docId} labels={outline.labels} />
         ) : (
           <div className="doc-placeholder">
             <p className="doc-placeholder-label">Loading chapter</p>

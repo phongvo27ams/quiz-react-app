@@ -9,8 +9,8 @@ import {
   faCircleInfo,
   faCircleExclamation,
   faTriangleExclamation,
-  faCircleCheck,
-  faCircleXmark,
+  faLightbulb,
+  faFireFlameCurved,
 } from '@fortawesome/free-solid-svg-icons';
 import 'katex/dist/katex.min.css';
 import 'highlight.js/styles/github.css';
@@ -72,7 +72,7 @@ function parseAdmonitions(value: string) {
   return output.join('\n');
 }
 
-export function RichText({
+export function MarkdownRenderer({
   value,
   idPrefix = '',
   labels,
@@ -88,7 +88,7 @@ export function RichText({
     },
     tip: {
       label: 'TIP',
-      icon: faCircleCheck,
+      icon: faLightbulb,
     },
     info: {
       label: 'INFO',
@@ -100,7 +100,7 @@ export function RichText({
     },
     danger: {
       label: 'DANGER',
-      icon: faCircleXmark,
+      icon: faFireFlameCurved,
     },
   } as const;
 

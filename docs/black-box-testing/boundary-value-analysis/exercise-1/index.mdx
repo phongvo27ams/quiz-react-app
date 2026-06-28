@@ -31,6 +31,37 @@ The interesting test values sit at the edge of the range:
 const stayLengths = [0, 1, 2, 13, 14, 15];
 ```
 
+```ts
+type ReservationRequest = {
+  guestName: string;
+  requestedStayLengthInNights: number;
+  arrivalDate: string;
+  departureDate: string;
+  specialInstructions?: string;
+};
+
+function validateReservationRequest(request: ReservationRequest) {
+  const minAllowedStayLengthInNights = 1;
+  const maxAllowedStayLengthInNights = 14;
+  const stayLengthIsOutsideAllowedRange =
+    request.requestedStayLengthInNights < minAllowedStayLengthInNights ||
+    request.requestedStayLengthInNights > maxAllowedStayLengthInNights;
+
+  if (stayLengthIsOutsideAllowedRange) {
+    return {
+      accepted: false,
+      message:
+        'The requested stay length is outside the allowed range and should be rejected immediately before any room assignment, pricing calculation, discount application, email notification, loyalty processing, or payment authorization is attempted by the reservation workflow.',
+    };
+  }
+
+  return {
+    accepted: true,
+    normalizedGuestSummary: `${request.guestName}::${request.arrivalDate}::${request.departureDate}::${request.requestedStayLengthInNights}`,
+  };
+}
+```
+
 :::danger
 Be careful when referencing local media paths inside nested exercise folders.
 
