@@ -1,0 +1,24 @@
+## Idempotency
+
+Idempotent endpoints should tolerate safe retries without duplicating business effects.
+
+### Exercise 1. Idempotency
+
+#### Retry model
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dictum fermentum eros, et convallis tellus tempor et. Nam interdum augue in velit volutpat viverra.
+
+#### Formula
+
+$$
+effect(request_n) = effect(request_1), \quad n \geq 1
+$$
+
+```ts
+await request.post('/payments').set('Idempotency-Key', 'abc-123').send(body).expect(201);
+await request.post('/payments').set('Idempotency-Key', 'abc-123').send(body).expect(200);
+```
+
+:::danger
+If the server stores only the response and not the business lock, duplicated effects can still occur under race conditions.
+:::

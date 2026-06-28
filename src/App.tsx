@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { RichText } from './richText';
 import bookOrder from '../book-order.json';
 
@@ -177,6 +177,97 @@ function buildDocOutline(doc: DocRecord, index: number, globalState: HeadingCoun
   };
 }
 
+function LazyDocSection({
+  doc,
+  outline,
+  preload = false,
+}: {
+  doc: DocRecord;
+  outline: DocOutline;
+  preload?: boolean;
+}) {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [isReady, setIsReady] = useState(preload);
+  const [printMode, setPrintMode] = useState(false);
+
+  useEffect(() => {
+    if (preload) {
+      setIsReady(true);
+    }
+  }, [preload]);
+
+  useEffect(() => {
+    const handleBeforePrint = () => {
+      startTransition(() => {
+        setPrintMode(true);
+        setIsReady(true);
+      });
+    };
+    const handleAfterPrint = () => {
+      startTransition(() => {
+        setPrintMode(false);
+      });
+    };
+
+    window.addEventListener('beforeprint', handleBeforePrint);
+    window.addEventListener('afterprint', handleAfterPrint);
+
+    return () => {
+      window.removeEventListener('beforeprint', handleBeforePrint);
+      window.removeEventListener('afterprint', handleAfterPrint);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isReady || printMode) return;
+
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.some((entry) => entry.isIntersecting);
+        if (!visible) return;
+        startTransition(() => {
+          setIsReady(true);
+        });
+        observer.disconnect();
+      },
+      {
+        rootMargin: '1200px 0px',
+        threshold: 0.01,
+      },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [isReady, printMode]);
+
+  const docId = `${outline.anchor}-`;
+
+  return (
+    <section className="chapter" id={outline.anchor} key={doc.path} ref={sectionRef}>
+      <div className="chapter-body doc-page">
+        {isReady || printMode ? (
+          <RichText value={doc.content} idPrefix={docId} labels={outline.labels} />
+        ) : (
+          <div className="doc-placeholder">
+            <p className="doc-placeholder-label">Loading chapter</p>
+            <h2 className="doc-placeholder-title">
+              <span className="heading-number">{outline.rootNumber}</span>
+              {outline.title}
+            </h2>
+            <p className="doc-placeholder-copy">
+              This chapter will render as you approach it, which keeps long books responsive even when the
+              document set grows large.
+            </p>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 function App() {
   const docs = useMemo(() => orderedDocs, []);
   const outlines = useMemo(() => {
@@ -255,15 +346,7 @@ function App() {
         <div className="book-article">
           {docs.map((doc, index) => {
             const outline = outlines[index];
-            const docId = `${outline.anchor}-`;
-
-            return (
-              <section className="chapter" id={outline.anchor} key={doc.path}>
-                <div className="chapter-body doc-page">
-                  <RichText value={doc.content} idPrefix={docId} labels={outline.labels} />
-                </div>
-              </section>
-            );
+            return <LazyDocSection doc={doc} key={doc.path} outline={outline} preload={index < 4} />;
           })}
         </div>
       </main>

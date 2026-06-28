@@ -1,0 +1,30 @@
+# Security Testing
+
+## Input Validation
+
+Robust validation is the first line of defense against malformed, malicious, or unexpected input.
+
+### Exercise 1. Input Validation
+
+#### Validation surface
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tincidunt justo nibh, id rhoncus ipsum sollicitudin ut. Etiam fermentum finibus elit eget mattis.
+
+#### Payload sketch
+
+```json
+{
+  "username": "<script>alert(1)</script>",
+  "amount": -999,
+  "country": "???"
+}
+```
+
+#### Review list
+
+- type validation
+- range validation
+- encoding normalization
+- error message hygiene
+
+![Input validation placeholder](https://placehold.co/1200x470/eef8fd/17324d?text=Input+Validation)

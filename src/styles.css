@@ -430,6 +430,28 @@ img {
   max-width: none;
 }
 
+.doc-placeholder {
+  padding: 2rem 0 2.4rem;
+  border-bottom: 1px dashed var(--line);
+}
+
+.doc-placeholder-label {
+  margin-bottom: 0.6rem;
+  color: var(--brand);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.doc-placeholder-title {
+  margin-bottom: 0.8rem;
+}
+
+.doc-placeholder-copy {
+  max-width: 42rem;
+  color: var(--muted);
+}
+
 h1,
 h2,
 h3,
@@ -804,5 +826,9 @@ pre code {
   .md-table td,
   .chapter blockquote {
     box-shadow: none;
+  }
+
+  .doc-placeholder {
+    display: none;
   }
 }

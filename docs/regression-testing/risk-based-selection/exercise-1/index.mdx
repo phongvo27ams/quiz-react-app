@@ -1,0 +1,27 @@
+## Risk-Based Selection
+
+Risk-based regression keeps suites lean by prioritizing areas with the highest business and technical impact.
+
+### Exercise 1. Risk-Based Selection
+
+#### Scoring idea
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque euismod odio et diam varius aliquet. Aenean eu libero eget mi finibus pharetra.
+
+#### Formula
+
+$$
+risk = impact \times probability \times change\ frequency
+$$
+
+```ts
+const candidates = [
+  { area: 'checkout', risk: 15 },
+  { area: 'profile', risk: 6 },
+  { area: 'search', risk: 9 },
+];
+```
+
+:::tip
+Re-rank the suite after every release train. Risk is not static once features, traffic, or ownership change.
+:::

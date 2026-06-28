@@ -1,0 +1,26 @@
+## Access Control
+
+Authorization defects often appear when role checks are inconsistent across read, write, and administrative actions.
+
+### Exercise 1. Access Control
+
+#### Role map
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque aliquam sem, vitae molestie lorem posuere quis. In et nibh cursus, maximus est ut, tincidunt felis.
+
+| Role | Read own | Read all | Delete |
+| --- | --- | --- | --- |
+| User | Yes | No | No |
+| Manager | Yes | Team only | No |
+| Admin | Yes | Yes | Yes |
+
+```ts
+const policy = {
+  user: ['profile:read:self'],
+  admin: ['profile:read:any', 'profile:delete:any'],
+};
+```
+
+:::warning
+Check direct object references, not only menu visibility. Hidden buttons do not prove secure authorization.
+:::
